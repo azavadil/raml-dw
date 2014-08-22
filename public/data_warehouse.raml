@@ -1,0 +1,75 @@
+#%RAML 0.8
+title: data-warehouse
+baseUri: http://localhost.com:5000/{version}
+version: 0.1
+/objects:
+  description: This is the endpoint that returns a list of data objects
+  get:
+   
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {[
+                {
+                    "id": "f99b9de7-c334-4ffc-842f-e51da33a4824",
+                    "name": "users"
+                },
+                {
+                    "id": "080dcd58-e07e-4e7c-8e4f-94e6b6303d0e",
+                    "name": "Monthly Conversions"
+                }
+              ]}
+  put:
+    description: |
+      Adds new data object
+    body:
+      application/json
+        schema: |
+          {
+            "name":"string",
+            "propertiesHash": "object",
+            "associationsHash": "object"
+          }
+        example: |
+          
+  /{objectId}:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "id": "f99b9de7-c334-4ffc-842f-e51da33a4824",
+                  "name": "users",
+                  "properties": []
+                }
+/instances:
+  description: This is the endpoint that returns a list of data objects instances
+  get:
+    queryParameters:
+      start:
+        displayName: start
+        type: number
+        description: the first user to be returned
+        example: 50
+        required: false
+      count:
+        displayName: count
+        type: number
+        description: the number of users to be returned
+        example: 10
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {[
+                {name: "Bob Roberts", id: "asdf2"}, 
+                {name: "Sales Reps", id: "asdf3"}, 
+                {name: "Vertical Leads", "asdf4"}, 
+                {name: "Founders", id: "asdf1"},
+              ]}
