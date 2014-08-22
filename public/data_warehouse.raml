@@ -13,12 +13,12 @@ version: 0.1
             example: |
               {[
                 {
-                    "id": "f99b9de7-c334-4ffc-842f-e51da33a4824",
-                    "name": "users"
+                  "id": "f99b9de7-c334-4ffc-842f-e51da33a4824",
+                  "name": "users"
                 },
                 {
-                    "id": "080dcd58-e07e-4e7c-8e4f-94e6b6303d0e",
-                    "name": "Monthly Conversions"
+                  "id": "080dcd58-e07e-4e7c-8e4f-94e6b6303d0e",
+                  "name": "Monthly Conversions"
                 }
               ]}
   put:
@@ -28,12 +28,35 @@ version: 0.1
       application/json
         schema: |
           {
-            "name":"string",
-            "propertiesHash": "object",
-            "associationsHash": "object"
+            "type": "object"
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "required": false,
+            "type": "object" ,
+            "properties": {
+              "associationsHash" : {
+                "required": true,
+                "type": "object" ,
+              "propertiesHash" : {
+                "required": true,
+                "type": "object" ,
+              },
+            "name": {
+              "required": true,
+              "type": "string"
+            }
           }
         example: |
-          
+          {
+            "name":"Monthly Conversions",
+            "propertiesHash":{
+              "Salesforce ID":"string",
+              "Rep Name":"string",
+              "Number of Conversion":"integer"
+            },
+            "associationsHash":{
+              "Salesforce ID":"users"
+            }
+          }            
   /{objectId}:
     get:
       responses:
@@ -46,30 +69,89 @@ version: 0.1
                   "name": "users",
                   "properties": []
                 }
+    post:
+      description: |
+        upload an instance of a data object
+      body:
+        application/json:
+          schema: |
+            {
+              "type": "object",
+              "$schema":"http://json-schema.org/draft-03/schema",
+              "id": "http://jsonschema.net",
+              "required": true,
+              "properties":{
+                "object_id":{
+                  "type": "string",
+                  "required": "true"
+                },
+                "label": {
+                  "type": "string",
+                  "required": true
+                },
+                "moduleName":{
+                  "type": "string",
+                  "require": true
+                },
+                "moduleParams":{
+                  "type": "objectz13az"
+                }
+                "moduleName":"string",
+                "moduleParams":{
+                  "data": {
+                    "type" : "array"
+                    "required": true
+                  }
+                }
+              }
+            }
+          example: |
+            {
+              "object_id":"dcc3039e-377d-45ea-a53b-e7256b941e82",
+              "label":"June conversions",
+              "moduleName":"json",
+              "moduleParams":{
+                "data":[
+                  {
+                    "Salesforce ID":"123abc",
+                    "Rep Name":"Adam",
+                    "Number of Conversion":"11"
+                  },
+                  {
+                    "Salesforce ID":"456def",
+                    "Rep Name":"Bob",
+                    "Number of Conversion":"9"
+                  }
+                ]
+              }
+            }
+      /instances
+        description: Returns a list of data object instances related to a specific data object
+        get:
+          responses:
+            200:
+              body:
+                application/json:
+                  example: |
+                    [
+                      {
+                        "id": 1,
+                        "object_id": "6c76bffc-d41f-4c81-b1a3-7a4e6a309084",
+                        "upload_date": "2014-08-21T23:11:36.372Z"
+                      }
+                    ]
 /instances:
   description: This is the endpoint that returns a list of data objects instances
   get:
-    queryParameters:
-      start:
-        displayName: start
-        type: number
-        description: the first user to be returned
-        example: 50
-        required: false
-      count:
-        displayName: count
-        type: number
-        description: the number of users to be returned
-        example: 10
-        required: false
     responses:
       200:
         body:
           application/json:
             example: |
-              {[
-                {name: "Bob Roberts", id: "asdf2"}, 
-                {name: "Sales Reps", id: "asdf3"}, 
-                {name: "Vertical Leads", "asdf4"}, 
-                {name: "Founders", id: "asdf1"},
-              ]}
+              [
+                {
+                  "id": 1,
+                  "object_id": "6c76bffc-d41f-4c81-b1a3-7a4e6a309084",
+                  "upload_date": "2014-08-21T23:11:36.372Z"
+                }
+              ]
