@@ -19,8 +19,11 @@ app.use(express.static(__dirname + '/public'));
 // });
 
 app.get('/', function (req, res){
-  console.log('hello');
-  res.send('hello my friend');
+  res.send('Laplace');
+});
+
+app.get('/data_warehouse', function(req, res){
+  res.sendFile(__dirname + '/public/data_warehouse.raml');
 });
 
 var port = process.env.PORT || 5000;
